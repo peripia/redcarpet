@@ -204,6 +204,12 @@ rndr_strikethrough(struct buf *ob, const struct buf *text, void *opaque)
 }
 
 static int
+rndr_spoiler(struct buf *ob, const struct buf *text, void *opaque)
+{
+	SPAN_CALLBACK("spoiler", 1, buf2str(text));
+}
+
+static int
 rndr_superscript(struct buf *ob, const struct buf *text, void *opaque)
 {
 	SPAN_CALLBACK("superscript", 1, buf2str(text));
