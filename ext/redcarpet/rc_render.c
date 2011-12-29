@@ -259,6 +259,7 @@ static struct sd_callbacks rb_redcarpet_callbacks = {
 	rndr_raw_html,
 	rndr_triple_emphasis,
 	rndr_strikethrough,
+	rndr_spoiler,
 	rndr_superscript,
 
 	rndr_entity,
