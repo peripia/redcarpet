@@ -2363,9 +2363,6 @@ sd_markdown_new(
 	if (md->cb.codespan)
 		md->active_char['`'] = MD_CHAR_CODESPAN;
 
-	if ((extensions & MKDEXT_SPOILER) && md->cb.spoiler)
-		md->active_char['{'] = MD_CHAR_SPOILER;
-
 	if (md->cb.linebreak)
 		md->active_char['\n'] = MD_CHAR_LINEBREAK;
 
@@ -2381,6 +2378,9 @@ sd_markdown_new(
 		md->active_char['@'] = MD_CHAR_AUTOLINK_EMAIL;
 		md->active_char['w'] = MD_CHAR_AUTOLINK_WWW;
 	}
+
+	if (extensions & MKDEXT_SPOILER)
+		md->active_char['{'] = MD_CHAR_SPOILER;
 
 	if (extensions & MKDEXT_SUPERSCRIPT)
 		md->active_char['^'] = MD_CHAR_SUPERSCRIPT;

@@ -291,6 +291,7 @@ static const char *rb_redcarpet_method_names[] = {
 	"raw_html",
 	"triple_emphasis",
 	"strikethrough",
+	"spoiler",
 	"superscript",
 
 	"entity",
