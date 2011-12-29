@@ -692,7 +692,7 @@ char_spoiler(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t off
 	if (size < 2)
 		return 0;
 
-	spoler_start = spoiler_len = 1;
+	spoiler_start = spoiler_len = 1;
 
 	while (spoiler_len < size && data[spoiler_len] != '}' && data[spoiler_len - 1] != '\\')
 		spoiler_len++;
