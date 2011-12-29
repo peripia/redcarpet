@@ -170,6 +170,18 @@ rndr_codespan(struct buf *ob, const struct buf *text, void *opaque)
 }
 
 static int
+rndr_spoiler(struct buf *ob, const struct buf *text, void *opaque)
+{
+	if (!text || !text->size)
+		return 0;
+
+	BUFPUTSL(ob, "<mark class=\"spoiler\">");
+	bufput(ob, text->data, text->size);
+	BUFPUTSL(ob, "</mark>");
+	return 1;
+}
+
+static int
 rndr_strikethrough(struct buf *ob, const struct buf *text, void *opaque)
 {
 	if (!text || !text->size)
@@ -550,6 +562,7 @@ sdhtml_toc_renderer(struct sd_callbacks *callbacks, struct html_renderopt *optio
 		NULL,
 		rndr_triple_emphasis,
 		rndr_strikethrough,
+    rndr_spoiler,
 		rndr_superscript,
 
 		NULL,
@@ -591,6 +604,7 @@ sdhtml_renderer(struct sd_callbacks *callbacks, struct html_renderopt *options, 
 		rndr_raw_html,
 		rndr_triple_emphasis,
 		rndr_strikethrough,
+		rndr_spoiler,
 		rndr_superscript,
 
 		NULL,

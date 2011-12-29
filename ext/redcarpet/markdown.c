@@ -62,6 +62,7 @@ typedef size_t
 static size_t char_emphasis(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
 static size_t char_linebreak(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
 static size_t char_codespan(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
+static size_t char_spoiler(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
 static size_t char_escape(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
 static size_t char_entity(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
 static size_t char_langle_tag(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size);
@@ -75,6 +76,7 @@ enum markdown_char_t {
 	MD_CHAR_NONE = 0,
 	MD_CHAR_EMPHASIS,
 	MD_CHAR_CODESPAN,
+	MD_CHAR_SPOILER,
 	MD_CHAR_LINEBREAK,
 	MD_CHAR_LINK,
 	MD_CHAR_LANGLE,
@@ -90,6 +92,7 @@ static char_trigger markdown_char_ptrs[] = {
 	NULL,
 	&char_emphasis,
 	&char_codespan,
+	&char_spoiler,
 	&char_linebreak,
 	&char_link,
 	&char_langle_tag,
@@ -676,6 +679,37 @@ char_codespan(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t of
 	return end;
 }
 
+/* char_spoiler • '{' parsing a spoiler tag */
+static size_t
+char_spoiler(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size)
+{
+	size_t sup_start, sup_len;
+	struct buf *sup;
+
+	if (!rndr->cb.spoiler)
+		return 0;
+
+	if (size < 2)
+		return 0;
+
+	spoler_start = spoiler_len = 1;
+
+	while (spoiler_len < size && data[spoiler_len] != '}' && data[spoiler_len - 1] != '\\')
+		spoiler_len++;
+
+	if (spoiler_len == size)
+		return 0;
+
+	if (spoiler_len - spoiler_start == 0)
+		return (spoiler_start == 1) ? 2 : 0;
+
+	spoiler = rndr_newbuf(rndr, BUFFER_SPAN);
+	parse_inline(spoiler, rndr, data + spoiler_start, spoiler_len - spoiler_start);
+	rndr->cb.spoiler(ob, spoiler, rndr->opaque);
+	rndr_popbuf(rndr, BUFFER_SPAN);
+
+	return (spoiler_start == 1) ? spoiler_len + 1 : spoiler_len;
+}
 
 /* char_escape • '\\' backslash escape */
 static size_t
@@ -2328,6 +2362,9 @@ sd_markdown_new(
 
 	if (md->cb.codespan)
 		md->active_char['`'] = MD_CHAR_CODESPAN;
+
+	if (md->cb.spoiler)
+		md->active_char['{'] = MD_CHAR_SPOILER;
 
 	if (md->cb.linebreak)
 		md->active_char['\n'] = MD_CHAR_LINEBREAK;
