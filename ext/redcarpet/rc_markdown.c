@@ -42,6 +42,9 @@ static void rb_redcarpet_md_flags(VALUE hash, unsigned int *enabled_extensions_p
 	if (rb_hash_lookup(hash, CSTR2SYM("strikethrough")) == Qtrue)
 		extensions |= MKDEXT_STRIKETHROUGH;
 
+	if (rb_hash_lookup(hash, CSTR2SYM("spoiler")) == Qtrue)
+		extensions |= MKDEXT_SPOILER;
+
 	if (rb_hash_lookup(hash, CSTR2SYM("lax_html_blocks")) == Qtrue)
 		extensions |= MKDEXT_LAX_HTML_BLOCKS;
 

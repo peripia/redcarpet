@@ -2363,7 +2363,7 @@ sd_markdown_new(
 	if (md->cb.codespan)
 		md->active_char['`'] = MD_CHAR_CODESPAN;
 
-	if (md->cb.spoiler)
+	if ((extensions & MKDEXT_SPOILER) && md->cb.spoiler)
 		md->active_char['{'] = MD_CHAR_SPOILER;
 
 	if (md->cb.linebreak)
