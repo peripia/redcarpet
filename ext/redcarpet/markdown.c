@@ -683,8 +683,8 @@ char_codespan(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t of
 static size_t
 char_spoiler(struct buf *ob, struct sd_markdown *rndr, uint8_t *data, size_t offset, size_t size)
 {
-	size_t sup_start, sup_len;
-	struct buf *sup;
+	size_t spoiler_start, spoiler_len;
+	struct buf *spoiler;
 
 	if (!rndr->cb.spoiler)
 		return 0;
