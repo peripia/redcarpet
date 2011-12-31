@@ -30,6 +30,9 @@ static void rb_redcarpet_md_flags(VALUE hash, unsigned int *enabled_extensions_p
 	if (rb_hash_lookup(hash, CSTR2SYM("no_intra_emphasis")) == Qtrue)
 		extensions |= MKDEXT_NO_INTRA_EMPHASIS;
 
+	if (rb_hash_lookup(hash, CSTR2SYM("no_underscore_emphasis")) == Qtrue)
+		extensions |= MKDEXT_NO_UNDERSCORE_EMPHASIS;
+
 	if (rb_hash_lookup(hash, CSTR2SYM("tables")) == Qtrue)
 		extensions |= MKDEXT_TABLES;
 
